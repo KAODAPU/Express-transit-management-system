@@ -25,6 +25,15 @@ class Address(models.Model):
     name = models.CharField(max_length=100)  # 地址名
 
 
+# 快递中转查询
+class Item2Address(models.Model):
+    item_id = models.BigIntegerField()  # 物品id
+    Address_id = models.BigIntegerField()  # 地址id
+    line_id = models.IntegerField()  # 快递线路id
+    transfer_id = models.IntegerField()  # 中转id(注：用于查询在线路中第几站)
+    date = models.DateTimeField(auto_now_add=True)  # 录入时间
+
+
 # 用户类
 class User(models.Model):
     login_id = models.BigIntegerField()  # 账户id
