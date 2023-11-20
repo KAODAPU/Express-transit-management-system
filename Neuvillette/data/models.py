@@ -7,8 +7,7 @@ from django.utils import timezone
 # 物品类
 class Item(models.Model):
     item_id = models.BigIntegerField()  # 物品id
-    sender_id = models.BigIntegerField()  # 寄件人id
-    addressee_id = models.BigIntegerField()  # 收件人id
+    client_id = models.BigIntegerField()  # 寄件人id
     name = models.CharField(max_length=100)  # 物品名
     ship_date = models.DateTimeField(auto_now_add=True)  # 揽件时间
     receive_date = models.DateTimeField(default=None)  # 收货时间
@@ -16,6 +15,7 @@ class Item(models.Model):
     ship_address_id = models.BigIntegerField()  # 寄件地址id
     receive_address_id = models.BigIntegerField()  # 收件地址id
     remark = models.TextField(blank=True, default='')  # 备注
+    is_send = models.BooleanField(default=False)  # 是否揽件
     is_receive = models.BooleanField(default=False)  # 是否收货
 
 
