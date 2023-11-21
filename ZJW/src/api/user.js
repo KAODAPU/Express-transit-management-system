@@ -21,3 +21,10 @@ export function updatePassword(data) {
     data
   })
 }
+export function updateExpress(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'get',
+    data
+  })
+}

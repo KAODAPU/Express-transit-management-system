@@ -4,7 +4,7 @@
       <h3>快递寄送</h3>
       <el-button type="primary" @click="dialogVisible = true">添加快递</el-button>
     </div>
-    <el-table :data="tabledata.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="table">
+    <el-table v-loading="loading" :data="expressData" class="table">
       <el-table-column label="快递编号" prop="item_id" />
       <el-table-column label="寄件人" prop="sender_id" />
       <el-table-column label="收件人" prop="addressee_id" />
@@ -91,10 +91,65 @@
 <script>
 import { mapGetters } from 'vuex'
 import { pcaTextArr } from 'element-china-area-data'
+// import { updateExpress } from '@/api/user'
 export default {
   name: 'Dashboard',
   data() {
     return {
+      expressData: [
+        {
+          item_id: 1,
+          sender_id: '张三',
+          addressee_id: '李四',
+          name: '物品1',
+          ship_date: '2019-01-01',
+          receive_date: '2019-01-01',
+          weight: '10kg',
+          ship_address_id: '北京市',
+          receive_address_id: '北京市',
+          remark: '备注',
+          is_receive: '已收'
+        },
+        {
+          item_id: 1,
+          sender_id: '张三',
+          addressee_id: '李四',
+          name: '物品1',
+          ship_date: '2019-01-01',
+          receive_date: '2019-01-01',
+          weight: '10kg',
+          ship_address_id: '北京市',
+          receive_address_id: '北京市',
+          remark: '备注',
+          is_receive: '已收'
+        },
+        {
+          item_id: 1,
+          sender_id: '张三',
+          addressee_id: '李四',
+          name: '物品1',
+          ship_date: '2019-01-01',
+          receive_date: '2019-01-01',
+          weight: '10kg',
+          ship_address_id: '北京市',
+          receive_address_id: '北京市',
+          remark: '备注',
+          is_receive: '已收'
+        }, {
+          item_id: 1,
+          sender_id: '张三',
+          addressee_id: '李四',
+          name: '物品1',
+          ship_date: '2019-01-01',
+          receive_date: '2019-01-01',
+          weight: '10kg',
+          ship_address_id: '北京市',
+          receive_address_id: '北京市',
+          remark: '备注',
+          is_receive: '已收'
+        }
+      ],
+
       pcaTextArr,
       // 收寄地区选择
 
@@ -109,7 +164,7 @@ export default {
         ],
         sender_telephone_number: [{
           required: true,
-          message: '请输入手机号',
+          message: '请输入寄件人手机号',
           trigger: 'blur'
         }, {
           pattern: /^1[3-9]\d{9}$/,
@@ -117,11 +172,11 @@ export default {
           trigger: 'blur'
         }],
         sender_selectedoptions: [
-          { required: true, message: '请选择收件人地区（省市区）', trigger: 'change' }
+          { required: true, message: '请选择寄件人地区（省市区）', trigger: 'change' }
         ],
 
         ship_address: [
-          { required: true, message: '输入详细地址', trigger: 'blur' }
+          { required: true, message: '输入寄件人详细地址', trigger: 'blur' }
         ],
 
         addressee_id: [
@@ -129,7 +184,7 @@ export default {
         ],
         addressee_telephone_number: [{
           required: true,
-          message: '请输入手机号',
+          message: '请输入收件人手机号',
           trigger: 'blur'
         }, {
           pattern: /^1[3-9]\d{9}$/,
@@ -137,10 +192,10 @@ export default {
           trigger: 'blur'
         }],
         addressee_selectedOptions: [
-          { required: true, message: '请选择寄件人地区（省市区）', trigger: 'change' }
+          { required: true, message: '请选择收件人地区（省市区）', trigger: 'change' }
         ],
         receive_address: [
-          { required: true, message: '输入详细地址', trigger: 'blur' }
+          { required: true, message: '输入收件人详细地址', trigger: 'blur' }
         ],
 
         name: [
@@ -150,31 +205,33 @@ export default {
           { required: true, message: '请填写物品重量', trigger: 'blur' }
         ]
       },
-
+      // 快递信息
       expressInformation: {
-        sender_id: '',
-        sender_telephone_number: '',
-        sender_selectedoptions: [],
-        ship_address: '',
+        sender_id: '', // 寄件人姓名
+        sender_telephone_number: '', // 寄件人电话号码
+        sender_selectedoptions: [], // 寄件人地区（省市区）
+        ship_address: '', // 寄件人详细地址
+        ship_address_id: '', // 寄件人全部地址
 
-        ship_address_id: '',
+        addressee_id: '', // 收件人姓名
+        addressee_telephone_number: '', // 收件人电话号码
+        addressee_selectedOptions: [], // 收件人地区（省市区）
+        receive_address: '', // 收件人详细地址
+        receive_address_id: '', // 收件人全部地址
 
-        addressee_id: '',
-        addressee_telephone_number: '',
-        addressee_selectedOptions: [],
-        receive_address: '',
-
-        receive_address_id: '',
-
-        weight: '',
-        name: ''
-      }
+        weight: '', // 重量
+        name: ''// 物品名称
+      },
+      loading: false
     }
   },
   computed: {
     ...mapGetters([
       'name'
     ])
+  },
+  created() {
+    this.getExpressData()
   },
   methods: {
     changeplace() {
@@ -190,6 +247,7 @@ export default {
           this.expressInformation.receive_address_id = this.expressInformation.addressee_selectedOptions.join('')
           this.expressInformation.receive_address_id = this.expressInformation.receive_address_id + this.expressInformation.receive_address
           console.log(this.expressInformation)
+          this.getExpressData()
         } else {
           return false
         }
@@ -204,6 +262,12 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
+    },
+    async getExpressData() {
+      // this.loading = false
+      // const res = await updateExpress(this.expressInformation)
+      // this.expressData = res.data
+      // this.loading = true
     }
   }
 }
