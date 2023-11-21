@@ -7,7 +7,7 @@ export default {
     name: 'inventory',
     component: () => import('@/views/inventory/index'),
     meta: {
-      title: '库存',
+      title: '接收快递',
       icon: 'table'
     }
   }]

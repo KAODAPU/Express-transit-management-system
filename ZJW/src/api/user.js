@@ -28,3 +28,23 @@ export function updateExpress(data) {
     data
   })
 }
+export function expressCondition() {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'get'
+  })
+}
+export function receiveExpress(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'post',
+    data
+  })
+}
+export function cancelReceiveExpress(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'post',
+    data
+  })
+}

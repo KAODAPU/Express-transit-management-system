@@ -4,7 +4,7 @@
       <h3>快递寄送</h3>
       <el-button type="primary" @click="dialogVisible = true">添加快递</el-button>
     </div>
-    <el-table v-loading="loading" :data="expressData" class="table">
+    <el-table v-loading="loading" :data="expressData.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="table">
       <el-table-column label="快递编号" prop="item_id" />
       <el-table-column label="寄件人" prop="sender_id" />
       <el-table-column label="收件人" prop="addressee_id" />
@@ -16,6 +16,14 @@
       <el-table-column label="收件地址" prop="receive_address_id" />
       <el-table-column label="备注" prop="remark" />
       <el-table-column label="状态" prop="is_receive" />
+      <el-table-column
+        label="操作"
+        width="100"
+      >
+        <template v-slot="{ row }">
+          <el-button type="primary" size="small" :disabled="row.is_receive" @click="handleClick(scope.row)">取消寄件</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       align="center"
@@ -23,7 +31,7 @@
       :page-sizes="[1,5,10,20]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="tabledata.length"
+      :total="expressData.length"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
