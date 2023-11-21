@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="calender-container">
+      <el-calendar v-model="value" />
+    </div>
+
   </div>
 </template>
 
@@ -9,22 +12,30 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+      value: new Date()
+    }
+  },
   computed: {
     ...mapGetters([
-      'name'
     ])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
+.calender-container {
+  width:50%;
+  margin: 0 0 auto 50%;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+@media screen and (max-width: 600px) {
+    .calender-container {
+      width:100%;
+      margin: auto;
+    }
 }
 </style>

@@ -24,11 +24,16 @@
           <span v-else>{{ row.receive_address_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="is_receive" sortable align="center">
+      <el-table-column label="揽件状态" prop="is_send" sortable align="center">
         <template v-slot="{ row }">
-          <!-- 开 1 关 0 -->
-          <el-switch v-if="row.isEdit" v-model="row.editRow.is_receive" :active-value="1" :inactive-value="0" />
-          <span v-else>  {{ row.is_receive === 1 ? "已收货" : "未收货" }} </span>
+          <el-switch v-if="row.isEdit" v-model="row.editRow.is_send" :active-value="true" :inactive-value="false" :disabled="row.editRow.is_receive" />
+          <span v-else>  {{ row.is_send === true ? "已揽件" : "未揽件" }} </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="收货状态" prop="is_receive" sortable align="center">
+        <template v-slot="{ row }">
+          <el-switch v-if="row.isEdit" v-model="row.editRow.is_receive" :active-value="true" :inactive-value="false" :disabled="!row.editRow.is_send" />
+          <span v-else>  {{ row.is_receive === true ? "已收货" : "未收货" }} </span>
         </template>
       </el-table-column>
       <el-table-column label="备注" prop="remark" align="center" />
@@ -74,13 +79,17 @@ export default {
           ship_date: '2018-01-01',
           receive_date: '2018-01-01',
           weight: '10kg',
-          is_receive: 1,
+          is_receive: false,
+          is_send: true,
+          receive_address_id: '北京市朝阳区',
           remark: '备注'
         }
       ],
       currentPage: 1, // 当前页码
       pageSize: 1,
-      pcaTextArr
+      pcaTextArr,
+      disabled_send: false,
+      disabled_receive: true
     }
   },
   created() {
@@ -104,6 +113,7 @@ export default {
         this.$set(item, 'isEdit', false)
         this.$set(item, 'editRow', {
           receive_address_id: item.receive_address_id,
+          is_send: item.is_send,
           is_receive: item.is_receive,
           selectedOptions: [],
           address: ''
@@ -115,6 +125,7 @@ export default {
       // 更新缓存数据
       row.editRow.receive_address_id = row.receive_address_id
       row.editRow.is_receive = row.is_receive
+      row.editRow.is_send = row.is_send
     },
     btnEditOK(row) {
       row.editRow.receive_address_id = row.editRow.selectedOptions.join('') + row.editRow.address
