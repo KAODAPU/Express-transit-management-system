@@ -57,3 +57,14 @@ def send(request):
             return JsonResponse(json.dumps({'is_error': False, 'remark': '揽件成功'}), safe=False)
         else:
             return JsonResponse(json.dumps({'is_error': True, 'remark': '未查询有此包裹信息'}), safe=False)
+
+
+# 包裹信息查询接口
+def inquire(request):
+    if request.method == 'POST':
+        post = request.POST
+        data = Item.objects.filter(item_id=post['item_id'])
+        if data:
+            return JsonResponse(json.dumps({'is_error': False, 'data': data[0], 'remark': '揽件成功'}), safe=False)
+        else:
+            return JsonResponse(json.dumps({'is_error': True, 'data': None, 'remark': '未查询有此包裹信息'}), safe=False)
