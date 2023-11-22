@@ -21,7 +21,7 @@
         width="100"
       >
         <template v-slot="{ row }">
-          <el-button type="primary" size="small" :disabled="row.is_receive" @click="handleClick(scope.row)">取消寄件</el-button>
+          <el-button type="primary" size="small" :disabled="row.is_receive" @click="removeExpress(row.item_id)">取消寄件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -100,6 +100,7 @@
 import { mapGetters } from 'vuex'
 import { pcaTextArr } from 'element-china-area-data'
 // import { updateExpress } from '@/api/user'
+import { addExpress, deleteExpress } from '@/api/user'
 export default {
   name: 'Dashboard',
   data() {
@@ -213,7 +214,7 @@ export default {
           { required: true, message: '请填写物品重量', trigger: 'blur' }
         ]
       },
-      // 快递信息
+      // 添加快递信息
       expressInformation: {
         sender_id: '', // 寄件人姓名
         sender_telephone_number: '', // 寄件人电话号码
@@ -242,20 +243,26 @@ export default {
     this.getExpressData()
   },
   methods: {
+    async removeExpress(item_id) {
+      await deleteExpress(item_id)
+      alert('删除成功')
+    },
     changeplace() {
       console.log(this.selectedOptions)
     },
     submitCourier() {
-      this.$refs.form.validate((isOK) => {
+      this.$refs.form.validate(async(isOK) => {
         if (isOK) {
-          alert('添加成功')
           this.dialogVisible = false
           this.expressInformation.ship_address_id = this.expressInformation.sender_selectedoptions.join('')
           this.expressInformation.ship_address_id = this.expressInformation.ship_address_id + this.expressInformation.ship_address
           this.expressInformation.receive_address_id = this.expressInformation.addressee_selectedOptions.join('')
           this.expressInformation.receive_address_id = this.expressInformation.receive_address_id + this.expressInformation.receive_address
           console.log(this.expressInformation)
+          await addExpress(this.expressInformation)
           this.getExpressData()
+          this.$refs.form.resetFields()
+          alert('添加成功')
         } else {
           return false
         }

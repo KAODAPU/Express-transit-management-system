@@ -4,14 +4,15 @@
     <el-table :data="expressData.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="table">
       <el-table-column label="快递编号" prop="item_id" />
       <el-table-column label="寄件人" prop="sender_id" />
+      <el-table-column label="寄件人电话号码" prop="sender_telephone_number" />
       <el-table-column label="收件人" prop="addressee_id" />
+      <el-table-column label="收件人电话号码" prop="addressee_telephone_number" />
       <el-table-column label="物品" prop="name" />
       <el-table-column label="收货时间" prop="receive_date" />
       <el-table-column label="物品重量" prop="weight" />
       <el-table-column label="寄件地址" prop="ship_address_id" />
       <el-table-column label="收件地址" prop="receive_address_id" />
       <el-table-column label="备注" prop="remark" />
-      <el-table-column label="状态" prop="is_receive" />
       <el-table-column
         fixed="right"
         label="操作"
@@ -49,48 +50,17 @@ export default {
           item_id: 1,
           sender_id: '张三',
           addressee_id: '李四',
+
+          sender_telephone_number: '130000000000', // 寄件人电话号码
+          addressee_telephone_number: '15415151515', // 收件人电话号码
+
           name: '物品1',
           receive_date: '2019-01-01',
           weight: '10kg',
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: '未揽件'
-        },
-        {
-          item_id: 1,
-          sender_id: '张三',
-          addressee_id: '李四',
-          name: '物品1',
-          receive_date: '2019-01-01',
-          weight: '10kg',
-          ship_address_id: '北京市',
-          receive_address_id: '北京市',
-          remark: '备注',
-          is_receive: '未揽件'
-        },
-        {
-          item_id: 1,
-          sender_id: '张三',
-          addressee_id: '李四',
-          name: '物品1',
-          receive_date: '2019-01-01',
-          weight: '10kg',
-          ship_address_id: '北京市',
-          receive_address_id: '北京市',
-          remark: '备注',
-          is_receive: '未揽件'
-        }, {
-          item_id: 1,
-          sender_id: '张三',
-          addressee_id: '李四',
-          name: '物品1',
-          receive_date: '2019-01-01',
-          weight: '10kg',
-          ship_address_id: '北京市',
-          receive_address_id: '北京市',
-          remark: '备注',
-          is_receive: '未揽件'
+          is_receive: 'true'
         }
       ]
     }
