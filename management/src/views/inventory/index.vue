@@ -47,7 +47,7 @@
           </template>
           <template v-else>
             <!-- 非编辑状态 -->
-            <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
+            <el-button size="mini" type="primary" @click="btnEditRow(row)">编辑</el-button>
           </template>
         </template>
       </el-table-column>
@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { update } from '@/api/inventory'
+// import { update } from '@/api/inventory'
 import { pcaTextArr } from 'element-china-area-data'
 export default {
   data() {
@@ -81,6 +81,7 @@ export default {
           weight: '10kg',
           is_receive: false,
           is_send: true,
+          ship_address_id: '北京市朝阳区',
           receive_address_id: '北京市朝阳区',
           remark: '备注'
         }
@@ -131,7 +132,7 @@ export default {
       row.editRow.receive_address_id = row.editRow.selectedOptions.join('') + row.editRow.address
       if (row.editRow.receive_address_id && row.editRow.address) {
         // 下一步操作
-        update({ ...row.editRow, id: row.id })
+        // update({ ...row.editRow, id: row.id })
         // 更新成功
         this.$message.success('更新成功')
         // 更新显示数据  退出编辑状态

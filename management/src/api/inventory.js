@@ -10,7 +10,7 @@ export function getTabledata() {
 export function update(data) {
   return request({
     url: '',
-    method: 'put',
+    method: 'post',
     data
   })
 }

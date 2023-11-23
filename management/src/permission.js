@@ -13,6 +13,7 @@ router.beforeEach(async(to, from, next) => {
   nprogress.start()
   if (store.getters.token) {
     // 存在token
+    store.dispatch('user/getUserInfo')
     if (to.path === '/login') {
       // 跳转到主页
       next('/') // 中转到主页
@@ -21,7 +22,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 判断是否获取过资料
       if (!store.getters.userId) {
-        await store.dispatch('user/getUserInfo')
+        store.dispatch('user/getUserInfo')
       }
       next() // 放过
     }

@@ -9,9 +9,6 @@ const service = axios.create({
 // 成功1 失败2
 service.interceptors.request.use((config) => {
   // 注入token
-  if (store.getters.token) {
-    config.headers.Authorization = `Bearer ${store.getters.token}`
-  }
   return config
 }, (error) => {
   // 失败执行promise

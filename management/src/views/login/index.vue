@@ -68,9 +68,10 @@ export default {
         }
       })
     }
-
   }
+
 }
+
 </script>
 <style lang="scss">
 .login-container {
@@ -115,4 +116,15 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 600px) {
+  .login-container{
+    .logo {
+    display: none;
+
+  }.form {
+      padding-left:0;
+    }
+    }
+  }
 </style>
