@@ -47,6 +47,15 @@ def pre_send(request):
         return JsonResponse(json.dumps({'is_error': False, 'remark': '寄件成功'}), safe=False)
 
 
+# 取消寄件
+def del_pre_send(request):
+    if request.method == 'POST':
+        post = request.POST
+        item = Item.objects.get(item_id=post['item_id'])
+        item.delete()
+        return JsonResponse(json.dumps({'is_error': False, 'remark': '取消寄件成功'}), safe=False)
+
+
 # 揽件接口
 def send(request):
     if request.method == 'POST':
@@ -55,6 +64,18 @@ def send(request):
         if check_data:
             check_data.update(is_send=True)
             return JsonResponse(json.dumps({'is_error': False, 'remark': '揽件成功'}), safe=False)
+        else:
+            return JsonResponse(json.dumps({'is_error': True, 'remark': '未查询有此包裹信息'}), safe=False)
+
+
+# 取消揽件接口
+def del_send(request):
+    if request.method == 'POST':
+        post = request.POST
+        check_data = Item.objects.filter(item_id=post['item_id'])
+        if check_data:
+            check_data.update(is_send=False)
+            return JsonResponse(json.dumps({'is_error': False, 'remark': '取消揽件成功'}), safe=False)
         else:
             return JsonResponse(json.dumps({'is_error': True, 'remark': '未查询有此包裹信息'}), safe=False)
 

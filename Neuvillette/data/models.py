@@ -12,8 +12,8 @@ class Item(models.Model):
     ship_date = models.DateTimeField(auto_now_add=True)  # 揽件时间
     receive_date = models.DateTimeField(default=None)  # 收货时间
     weight = models.FloatField()  # 物品重量
-    ship_address_id = models.BigIntegerField()  # 寄件地址id
-    receive_address_id = models.BigIntegerField()  # 收件地址id
+    ship_address_id = models.BigIntegerField()  # 寄件快递站地址id
+    receive_address_id = models.BigIntegerField()  # 收件快递站地址id
     remark = models.TextField(blank=True, default='')  # 备注
     is_send = models.BooleanField(default=False)  # 是否揽件
     is_receive = models.BooleanField(default=False)  # 是否收货
