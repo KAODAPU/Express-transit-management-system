@@ -6,15 +6,29 @@ from django.utils import timezone
 
 # 物品表
 class Item(models.Model):
-    item_id = models.BigIntegerField()  # 物品id
-    client_id = models.BigIntegerField()  # 寄件人id
-    name = models.CharField(max_length=100)  # 物品名
+    item_id = models.CharField(max_length=100, default='')  # 物品id
+
+    sender_id = models.CharField(max_length=100, default='')  # 寄件人id
+    sender_telephone_number = models.CharField(max_length=100, default='')
+
+    addressee_id = models.CharField(max_length=100, default='')  # 收件人id
+    addressee_telephone_number = models.CharField(max_length=100, default='')
+
+    name = models.CharField(max_length=100, default='')  # 物品名
+
     ship_date = models.DateTimeField(auto_now_add=True)  # 揽件时间
     receive_date = models.DateTimeField(default=None)  # 收货时间
-    weight = models.FloatField()  # 物品重量
-    ship_address_id = models.BigIntegerField()  # 寄件快递站地址id
-    receive_address_id = models.BigIntegerField()  # 收件快递站地址id
+
+    weight = models.CharField(max_length=100, default='')  # 物品重量
+
+    ship_address = models.CharField(max_length=100, default='')
+    ship_address_id = models.CharField(max_length=100, default='')  # 寄件快递站地址id
+
+    receive_address_id = models.CharField(max_length=100, default='')  # 收件快递站地址id
+    receive_address = models.CharField(max_length=100, default='')
+
     remark = models.TextField(blank=True, default='')  # 备注
+
     is_send = models.BooleanField(default=False)  # 是否揽件
     is_receive = models.BooleanField(default=False)  # 是否收货
 
