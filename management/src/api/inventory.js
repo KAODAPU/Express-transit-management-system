@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getTabledata() {
   return request({
-    url: '',
+    url: '/test/packet',
     method: 'get'
   })
 }

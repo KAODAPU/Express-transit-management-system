@@ -65,25 +65,13 @@
   </div>
 </template>
 <script>
-// import { update } from '@/api/inventory'
+import { update, getTabledata } from '@/api/inventory'
 import { pcaTextArr } from 'element-china-area-data'
 export default {
   data() {
     return {
       tabledata: [
         {
-          item_id: '1234567890',
-          sender_id: '张三',
-          addressee_id: '李四',
-          name: '电脑',
-          ship_date: '2018-01-01',
-          receive_date: '2018-01-01',
-          weight: '10kg',
-          is_receive: false,
-          is_send: true,
-          ship_address_id: '北京市朝阳区',
-          receive_address_id: '北京市朝阳区',
-          remark: '备注'
         }
       ],
       currentPage: 1, // 当前页码
@@ -106,6 +94,7 @@ export default {
       this.currentPage = val
     },
     getTabledata() {
+      this.tabledata = getTabledata()
       this.tabledata.forEach(item => {
         // item.isEdit = false // 添加一个属性 初始值为false
         // 数据响应式的问题  数据变化 视图更新
@@ -127,17 +116,15 @@ export default {
       row.editRow.receive_address_id = row.receive_address_id
       row.editRow.is_receive = row.is_receive
       row.editRow.is_send = row.is_send
+      console.log(row)
     },
     btnEditOK(row) {
       row.editRow.receive_address_id = row.editRow.selectedOptions.join('') + row.editRow.address
       if (row.editRow.receive_address_id && row.editRow.address) {
         // 下一步操作
-        // update({ ...row.editRow, id: row.id })
+        update({ item_id: row.item_id, receive_address_id: row.editRow.receive_address_id, is_receive: row.editRow.is_receive, is_send: row.editRow.is_send })
         // 更新成功
         this.$message.success('更新成功')
-        // 更新显示数据  退出编辑状态
-        // row.name = row.editRow.name // eslint的一校验 误判
-        // Object.assign(target, source)
         Object.assign(row, {
           ...row.editRow,
           isEdit: false // 退出编辑模式
