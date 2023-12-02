@@ -15,15 +15,27 @@
       <el-table-column label="寄件地址" prop="ship_address_id" />
       <el-table-column label="收件地址" prop="receive_address_id" />
       <el-table-column label="备注" prop="remark" />
-      <el-table-column label="状态" prop="is_receive" />
       <el-table-column
+        label="状态"
+        width="150"
+      >
+        <template v-slot="{ row }">
+          <span v-if="row.is_send===true&&row.is_receive===false">已揽件未收件</span>
+          <span v-else-if="row.is_receive===true&&row.is_send===true">已收件</span>
+          <span v-else>未揽件</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        fixed="right"
         label="操作"
         width="100"
       >
         <template v-slot="{ row }">
-          <el-button type="primary" size="small" :disabled="row.is_receive" @click="removeExpress(row.item_id)">取消寄件</el-button>
+          <el-button type="primary" size="small" :disabled="row.is_send" @click="removeExpress(row.item_id)">取消寄件</el-button>
         </template>
       </el-table-column>
+
     </el-table>
     <el-pagination
       align="center"
@@ -99,7 +111,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { pcaTextArr } from 'element-china-area-data'
-// import { updateExpress } from '@/api/user'
+import { updateExpress } from '@/api/user'
 import { addExpress, deleteExpress } from '@/api/user'
 export default {
   name: 'Dashboard',
@@ -117,7 +129,7 @@ export default {
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: '已收'
+          is_receive: false
         },
         {
           item_id: 1,
@@ -130,7 +142,7 @@ export default {
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: '已收'
+          is_receive: true
         },
         {
           item_id: 1,
@@ -143,7 +155,7 @@ export default {
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: '已收'
+          is_receive: true
         }, {
           item_id: 1,
           sender_id: '张三',
@@ -155,7 +167,7 @@ export default {
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: '已收'
+          is_receive: true
         }
       ],
 
@@ -164,7 +176,7 @@ export default {
 
       tabledata: [],
       currentPage: 1, // 当前页码
-      pageSize: 1,
+      pageSize: 5,
       dialogVisible: false, // 弹框显示隐藏
       informationrules: {
 
@@ -245,6 +257,7 @@ export default {
   methods: {
     async removeExpress(item_id) {
       await deleteExpress(item_id)
+      this.getExpressData()
       alert('删除成功')
     },
     changeplace() {
@@ -258,7 +271,6 @@ export default {
           this.expressInformation.ship_address_id = this.expressInformation.ship_address_id + this.expressInformation.ship_address
           this.expressInformation.receive_address_id = this.expressInformation.addressee_selectedOptions.join('')
           this.expressInformation.receive_address_id = this.expressInformation.receive_address_id + this.expressInformation.receive_address
-          console.log(this.expressInformation)
           await addExpress(this.expressInformation)
           this.getExpressData()
           this.$refs.form.resetFields()
@@ -280,8 +292,8 @@ export default {
     },
     async getExpressData() {
       // this.loading = false
-      // const res = await updateExpress(this.expressInformation)
-      // this.expressData = res.data
+      const res = await updateExpress()
+      this.expressData = res.data
       // this.loading = true
     }
   }

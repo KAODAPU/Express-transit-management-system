@@ -14,14 +14,23 @@
       <el-table-column label="收件地址" prop="receive_address_id" />
       <el-table-column label="备注" prop="remark" />
       <el-table-column
-        fixed="right"
-        label="操作"
+        label="揽件操作"
         width="145"
       >
         <template v-slot="{ row }">
-          <el-button v-if="row.is_receive === '未揽件'" type="primary" @click="collectExpress(row.item_id)">揽件</el-button>
-          <el-button v-else-if="row.is_receive === '已揽件'" type="warning" @click="cancelExpress(row.item_id)">取消揽件</el-button>
-          <el-button v-else disabled type="danger" @click="cancelExpress(row.item_id)">已被揽件</el-button>
+          <el-button v-if="row.is_send" type="warning" @click="sendExpress(row.item_id)">取消揽件</el-button>
+          <el-button v-else type="primary" @click="cancelSendExpress(row.item_id)">揽件</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="收件操作"
+        width="145"
+      >
+        <template v-slot="{ row }">
+          <el-button v-if="row.is_send&&row.is_receive==true" type="warning" @click="collectExpress(row.item_id)">取消收件</el-button>
+          <el-button v-else-if="row.is_send&&row.is_receive===false" type="primary" @click="cancelExpress(row.item_id)">收件</el-button>
+          <el-button v-else-if="row.is_send===false" type="danger" :disabled="true" @click="cancelExpress(row.item_id)">未揽件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,8 +47,7 @@
   </div>
 </template>
 <script>
-// import { receiveExpress } from '@/api/user.js'
-// import { ancelReceiveExpress } from '@/api/user.js'
+import { receiveExpress, sendExpress, cancelSendExpress, expressCondition, cancelReceiveExpress } from '@/api/user.js'
 export default {
   data() {
     return {
@@ -60,7 +68,8 @@ export default {
           ship_address_id: '北京市',
           receive_address_id: '北京市',
           remark: '备注',
-          is_receive: 'true'
+          is_receive: true,
+          is_send: false
         }
       ]
     }
@@ -71,20 +80,30 @@ export default {
   methods:
   {
     async collectExpress(item_id) {
-      // await receiveExpress(item_id)
+      await receiveExpress(item_id)
+      this.getExpressCondition()
+      this.$message.success('收件成功')
+    },
+    async cancelExpress(item_id) {
+      await cancelReceiveExpress(item_id)
+      this.getExpressCondition()
+      this.$message.success('取消收件成功')
+    },
+    async sendExpress(item_id) {
+      await sendExpress(item_id)
       this.getExpressCondition()
       this.$message.success('揽件成功')
     },
-    async cancelExpress(item_id) {
-      // await cancelReceiveExpress(item_id)
+    async cancelSendExpress(item_id) {
+      await cancelSendExpress(item_id)
       this.getExpressCondition()
-      this.$message.success('取消成功')
+      this.$message.success('取消揽件成功')
     },
     async getExpressCondition() {
-      // this.loading = false
-      // const res = await expressCondition()
-      // this.expressData = res.data
-      // this.loading = true
+      this.loading = false
+      const res = await expressCondition()
+      this.expressData = res.data
+      this.loading = true
     },
     handleSizeChange(val) {
       this.currentPage = 1

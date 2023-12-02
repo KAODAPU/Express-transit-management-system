@@ -51,7 +51,7 @@ export function expressCondition() {
     method: 'get'
   })
 }
-// 揽件
+// 收件
 export function receiveExpress(data) {
   return request({
     url: '/sys/user/updatePass',
@@ -59,8 +59,22 @@ export function receiveExpress(data) {
     data
   })
 }
-// 取消揽件
+// 取消收件
 export function cancelReceiveExpress(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'post',
+    data
+  })
+}
+export function sendExpress(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'post',
+    data
+  })
+}
+export function cancelSendExpress(data) {
   return request({
     url: '/sys/user/updatePass',
     method: 'post',
