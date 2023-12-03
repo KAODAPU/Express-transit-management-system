@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <el-table :data="tabledata.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="table" stripe border>
+    <el-table :data="data.slice((currentPage-1)*pageSize,currentPage*pageSize)" class="table" stripe border>
       <el-table-column label="快递编号" prop="item_id" align="center" />
       <el-table-column label="寄件人" prop="sender_id" align="center" />
       <el-table-column label="收件人" prop="addressee_id" align="center" />
@@ -65,14 +65,12 @@
   </div>
 </template>
 <script>
-import { update, getTabledata } from '@/api/inventory'
+import { update, gettabledata } from '@/api/inventory'
 import { pcaTextArr } from 'element-china-area-data'
 export default {
   data() {
     return {
-      tabledata: [
-        {
-        }
+      data: [
       ],
       currentPage: 1, // 当前页码
       pageSize: 1,
@@ -93,9 +91,10 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
     },
-    getTabledata() {
-      this.tabledata = getTabledata()
-      this.tabledata.forEach(item => {
+    async getTabledata() {
+      const res = await gettabledata()
+      this.data = res.data
+      this.data.forEach(item => {
         // item.isEdit = false // 添加一个属性 初始值为false
         // 数据响应式的问题  数据变化 视图更新
         // 添加的动态属性 不具备响应式特点
@@ -116,13 +115,12 @@ export default {
       row.editRow.receive_address_id = row.receive_address_id
       row.editRow.is_receive = row.is_receive
       row.editRow.is_send = row.is_send
-      console.log(row)
     },
-    btnEditOK(row) {
+    async btnEditOK(row) {
       row.editRow.receive_address_id = row.editRow.selectedOptions.join('') + row.editRow.address
       if (row.editRow.receive_address_id && row.editRow.address) {
         // 下一步操作
-        update({ item_id: row.item_id, receive_address_id: row.editRow.receive_address_id, is_receive: row.editRow.is_receive, is_send: row.editRow.is_send })
+        await update({ item_id: row.item_id, receive_address_id: row.editRow.receive_address_id, is_receive: row.editRow.is_receive, is_send: row.editRow.is_send })
         // 更新成功
         this.$message.success('更新成功')
         Object.assign(row, {
@@ -132,6 +130,7 @@ export default {
       } else {
         this.$message.warning('不能为空')
       }
+      this.getTabledata()
     }
   }
 }</script>

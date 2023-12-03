@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getTabledata() {
+export function gettabledata() {
   return request({
     url: '/test/packet',
     method: 'get'
