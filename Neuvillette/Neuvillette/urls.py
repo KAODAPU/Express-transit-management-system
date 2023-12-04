@@ -17,6 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import data.views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("sys/user/updatePass1/", data.views.all_inquire),
+    path("sys/user/del_pre_send/", data.views.del_pre_send),
+    path("sys/user/pre_send/", data.views.pre_send),
+    path('sys/getdata', data.views.all_inquire),
+    path("sys/user/expressCondition", data.views.all_inquire),
+    path("sys/user/sendExpress/", data.views.send),
+    path("sys/user/cancelSendExpress/", data.views.del_send),
+    path("sys/user/receiveExpress/", data.views.receive),
+    path("sys/user/cancelReceiveExpress/", data.views.del_receive),
+    path("sys/update/", data.views.modify),
+    path('sys/gettabledata/', data.views.all_inquire)
 ]

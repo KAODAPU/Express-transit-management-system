@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from datetime import datetime
 
 
 # Create your models here.
@@ -17,7 +18,7 @@ class Item(models.Model):
     name = models.CharField(max_length=100, default='')  # 物品名
 
     ship_date = models.DateTimeField(auto_now_add=True)  # 揽件时间
-    receive_date = models.DateTimeField(default=None)  # 收货时间
+    receive_date = models.DateTimeField(null=True, default=None)  # 收货时间
 
     weight = models.CharField(max_length=100, default='')  # 物品重量
 
